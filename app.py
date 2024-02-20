@@ -49,7 +49,6 @@ def main():
                 vector_store = FAISS.from_texts(chunks, embedder)
                 with open(f"embedded_docs/{vector_store_name}.pkl", "wb") as f:
                     pickle.dump(vector_store, f)
-        st.balloons()
 
         
         # Display a input box for user to ener query
@@ -65,7 +64,7 @@ def main():
                 context = "\n\n".join([d.page_content for d in relevant_docs])
                 
                 # Prompt template for the LLM
-                template = f"Answer the question based only on the following context: \"{context}.\" Question: {question}"
+                template = f"Context: \"{context}.\" Question: {question}"
                 
                 # API settings
                 headers = {"Authorization": st.secrets["API_KEY"]}
@@ -74,7 +73,7 @@ def main():
                 payload = {
                     "providers": "openai",
                     "text": template,
-                    "chatbot_global_action": "You are an AI assistant that answers questions based on the documents uploaded by the user. Only use the context provided to you to answer the question. If you can't find the answer in the provided context, tell the user that you can't find the answer. Do not directly copy the context when generation the answer.",
+                    "chatbot_global_action": "You are an AI assistant that answers questions based on the documents uploaded by the user. If you can't find the answer in the provided context, tell the user that you can't find the answer.",
                     "previous_history": [],
                     "temperature": 0.0,
                     "max_tokens": 300,
